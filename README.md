@@ -4,7 +4,7 @@ UWP 自已的 ImageLoader （借签自iOS和Android上的接口设计）
 初始化示例::
 ```java
 
-ImageLoader.instance.init(new ImageLoaderConfiguration.Builder()
+ImageLoader.Instance.Init(new ImageLoaderConfiguration.Builder()
                                     .ThreadPoolSize(5)//线程池内加载的数量
                                     .DenyCacheImageMultipleSizesInMemory()
                                     .MemoryCache(new MemoryCache(10 * 1024 * 1024)) // 你可以通过自己的内存缓存实现
@@ -18,15 +18,15 @@ ImageLoader.instance.init(new ImageLoaderConfiguration.Builder()
 
 接口使用示例::
 ```java
-var loader = ImageLoader.instance;
+var loader = ImageLoader.Instance;
 
 //a.1为imageView加载图片
-loader.displayImage(uri, imageView);
+loader.DisplayImage(uri, imageView);
 //a.2为imageBrush加载图片源
-loader.displayImage(uri, imageBrush);
+loader.DisplayImage(uri, imageBrush);
 
 //b.下载图片并回调
-loader.downloadImage(uri, (state,url,view,img)=>{
+loader.DownloadImage(uri, (state,url,view,img)=>{
     if (state == LoadingState.Completed)
         ...
     else if (state == LoadingState.Failed)
