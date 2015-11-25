@@ -6,10 +6,24 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Noear.UWP.Loader {
     public class ImageLoader {
+        static ImageLoader _instance;
+        public static ImageLoader instance {
+            get {
+                if (_instance == null) {
+                    _instance = new ImageLoader();
+                }
+
+                return _instance;
+            }
+        }
+
+        //---------//---------//---------//---------//---------//---------
+
         protected ImageLoaderConfiguration config;
         protected Queue<ImageLoaderQueueItem> queue;
         protected int processing;
@@ -22,6 +36,15 @@ namespace Noear.UWP.Loader {
 
         public void displayImage(string url, Image view) {
             displayImage(url, view, config.displayImageOptions, null);
+        }
+
+        public void displayImage(ImageBrush imageBrush, String uri) {
+            downloadImage(uri, (state, url, v, img) =>
+             {
+                 if (state == LoadingState.Completed) {
+                     imageBrush.ImageSource = img;
+                 }
+             });
         }
 
         public void displayImage(string url, Image view, DisplayImageOptions options, ImageLoadingListener listener) {
