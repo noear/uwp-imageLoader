@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -90,13 +91,21 @@ namespace Noear.UWP.Loader {
         }
 
         private void DoUpdateSourceAsync() {
-            var loader = CurrentLoader();
-            loader.DownloadImage(Src.AbsoluteUri, (state, url, v, image) =>
-            {
-                if (_isLoaded) {
-                    view.Source = image;
-                }
-            });
+            if (Src == null || Src.Scheme == null)
+                return;
+
+            if (Src.Scheme.IndexOf("http") < 0) {//如果不是http地址
+                view.Source = new BitmapImage(Src);
+            }
+            else {//如果是http地址
+                var loader = CurrentLoader();
+                loader.DownloadImage(Src.AbsoluteUri, (state, url, v, image) =>
+                {
+                    if (_isLoaded) {
+                        view.Source = image;
+                    }
+                });
+            }
         }
 
         //-------
