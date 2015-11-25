@@ -28,18 +28,18 @@ namespace Noear.UWP.Loader {
         protected Queue<ImageLoaderQueueItem> queue;
         protected int processing;
 
-        public ImageLoader init(ImageLoaderConfiguration config) {
+        public ImageLoader Init(ImageLoaderConfiguration config) {
             this.config = config;
             this.queue = new Queue<ImageLoaderQueueItem>();
             return this;
         }
 
-        public void displayImage(string url, Image view) {
-            displayImage(url, view, config.displayImageOptions, null);
+        public void DisplayImage(string url, Image view) {
+            DisplayImage(url, view, config.DisplayImageOptions, null);
         }
 
-        public void displayImage(ImageBrush imageBrush, String uri) {
-            downloadImage(uri, (state, url, v, img) =>
+        public void DisplayImage(ImageBrush imageBrush, String uri) {
+            DownloadImage(uri, (state, url, v, img) =>
              {
                  if (state == LoadingState.Completed) {
                      imageBrush.ImageSource = img;
@@ -47,16 +47,16 @@ namespace Noear.UWP.Loader {
              });
         }
 
-        public void displayImage(string url, Image view, DisplayImageOptions options, ImageLoadingListener listener) {
+        public void DisplayImage(string url, Image view, DisplayImageOptions options, ImageLoadingListener listener) {
             var item = new ImageLoaderQueueItem() { Url = url, Options = options, View = view, Listener = listener };
             add(item);
         }
 
-        public void downloadImage(string url, ImageLoadingListener listener) {
-            downloadImage(url, config.displayImageOptions, listener);
+        public void DownloadImage(string url, ImageLoadingListener listener) {
+            DownloadImage(url, config.DisplayImageOptions, listener);
         }
 
-        public void downloadImage(string url, DisplayImageOptions options, ImageLoadingListener listener) {
+        public void DownloadImage(string url, DisplayImageOptions options, ImageLoadingListener listener) {
             var item = new ImageLoaderQueueItem() { Url = url, Options = options, View = null, Listener = listener };
             add(item);
             tryStart();
@@ -69,7 +69,7 @@ namespace Noear.UWP.Loader {
         }
         
         private async void tryStart() {
-            if (processing < config.threadPoolSize) {
+            if (processing < config.ThreadPoolSize) {
                 if (queue.Count > 0) {
                     processing++;
                     var item = queue.Dequeue();
@@ -81,8 +81,8 @@ namespace Noear.UWP.Loader {
         }
 
         private async Task doProcess(ImageLoaderQueueItem item) {
-            if (item.Options.cacheInMemory) {
-                var img = config.memoryCache.Get(item.Key);
+            if (item.Options.CacheInMemory) {
+                var img = config.MemoryCache.Get(item.Key);
                 if (img != null) {
                     doShow(item, img);
                     return;
@@ -91,13 +91,13 @@ namespace Noear.UWP.Loader {
 
             IBuffer buffer = null;
             BitmapImage image = null;
-            if (item.Options.cacheOnDisk) {
-                buffer = await config.diskCache.Get(item.Key);
+            if (item.Options.CacheOnDisk) {
+                buffer = await config.DiskCache.Get(item.Key);
                 image = await doDecode(item, buffer);
             }
 
             if (buffer == null) {
-                buffer = await config.imageDownloader.download(item.Url, item.Options.extraForDownloader);
+                buffer = await config.ImageDownloader.download(item.Url, item.Options.ExtraForDownloader);
                 image = await doDecode(item, buffer);
                 doSave(item, image, buffer);
             }
@@ -111,7 +111,6 @@ namespace Noear.UWP.Loader {
                 {
                     item.View.Source = image;
                 });
-
             }
 
             if (item.Listener != null) {
@@ -129,13 +128,12 @@ namespace Noear.UWP.Loader {
             if (image == null || buffer == null)
                 return;
             
-            
-            if (item.Options.cacheInMemory) {
-                config.memoryCache.Save(item.Key, image);
+            if (item.Options.CacheInMemory) {
+                config.MemoryCache.Save(item.Key, image);
             }
 
-            if (item.Options.cacheOnDisk) {
-                config.diskCache.Save(item.Key, buffer);
+            if (item.Options.CacheOnDisk) {
+                config.DiskCache.Save(item.Key, buffer);
             }
         }
 

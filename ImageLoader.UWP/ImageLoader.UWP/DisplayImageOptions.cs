@@ -7,29 +7,29 @@ using System.Threading.Tasks;
 namespace Noear.UWP.Loader {
     public class DisplayImageOptions {
 
-        public bool cacheInMemory { get; private set; }
-        public bool cacheOnDisk { get; private set; }
-        public Object extraForDownloader { get; private set; }
+        public bool CacheInMemory { get; private set; }
+        public bool CacheOnDisk { get; private set; }
+        public Object ExtraForDownloader { get; private set; }
 
         public class Builder{
             DisplayImageOptions options = new DisplayImageOptions();
 
-            public Builder cacheInMemory(bool cacheInMemory) {
-                options.cacheInMemory = cacheInMemory;
+            public Builder CacheInMemory(bool cacheInMemory) {
+                options.CacheInMemory = cacheInMemory;
                 return this;
             }
 
-            public Builder cacheOnDisk(bool cacheOnDisk) {
-                options.cacheOnDisk = cacheOnDisk;
+            public Builder CacheOnDisk(bool cacheOnDisk) {
+                options.CacheOnDisk = cacheOnDisk;
                 return this;
             }
 
-            public Builder extraForDownloader(Object extraForDownloader) {
-                options.extraForDownloader = extraForDownloader;
+            public Builder ExtraForDownloader(Object extraForDownloader) {
+                options.ExtraForDownloader = extraForDownloader;
                 return this;
             }
 
-            public DisplayImageOptions build() {
+            public DisplayImageOptions Build() {
                 return options;
             }
         }

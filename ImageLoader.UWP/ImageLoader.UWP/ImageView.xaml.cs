@@ -91,7 +91,7 @@ namespace Noear.UWP.Loader {
 
         private void DoUpdateSourceAsync() {
             var loader = CurrentLoader();
-            loader.downloadImage(Src.AbsoluteUri, (state, url, v, image) =>
+            loader.DownloadImage(Src.AbsoluteUri, (state, url, v, image) =>
             {
                 if (_isLoaded) {
                     view.Source = image;
