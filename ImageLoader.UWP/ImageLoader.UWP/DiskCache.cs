@@ -8,6 +8,12 @@ using Windows.Storage.Streams;
 
 namespace Noear.UWP.Loader {
     public class DiskCache : IDiskCache {
+        public DiskCache() {
+        }
+
+        public DiskCache(int limitSize) {
+        }
+
         StorageFolder root;
         StorageFolder folder;
         string directory;

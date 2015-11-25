@@ -9,7 +9,11 @@ using Windows.UI.Xaml.Media.Imaging;
 namespace Noear.UWP.Loader {
     public class MemoryCache : IMemoryCache {
 
-        public MemoryCache(int cacheSize) {
+        public MemoryCache() {
+
+        }
+
+        public MemoryCache(int limitSize) {
 
         }
 
