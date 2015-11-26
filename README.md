@@ -3,7 +3,7 @@ UWP 自已的 ImageLoader （借签自iOS和Android上的接口设计）
 
 更详细示例请参考Demo项目！！！（Demo1为简易示例；Demo2为高级示例）
 
-初始化示例::
+1.1.初始化示例::
 ```java
 
 var options = new DisplayImageOptions.Builder()
@@ -23,7 +23,7 @@ ImageLoader.Default.Init(new ImageLoaderConfiguration.Builder()
 
 ```
 
-接口使用示例::
+1.2.接口使用示例::
 ```java
 var loader = ImageLoader.Default;
 
@@ -43,50 +43,14 @@ loader.DownloadImage(uri, (state,url,view,img)=>{
 });
 ```
 
+1.3控件使用示例::
 
-控件使用示例::
-
-1.注册Loader
-```java
-public static ImageLoader Icon { get; private set; }
-public static ImageLoader Photo { get; private set; }
-
-//请在APP起动的时候调用
-public async static void TryInit() {
-    var options = new DisplayImageOptions.Builder()
-        .CacheInMemory(false)
-        .CacheOnDisk(true)
-        .Build();
-
-    var root = ApplicationData.Current.LocalFolder;
-    //图标
-    var iconDir = await root.CreateFolderAsync("icon", CreationCollisionOption.OpenIfExists);
-    Icon = ImageLoader.Register("icon",new ImageLoaderConfiguration.Builder()
-                        .ThreadPoolSize(5)
-                        .DenyCacheImageMultipleSizesInMemory()
-                        .MemoryCache(new MemoryCache(10 * 1024 * 1024))
-                        .TasksProcessingOrder(QueueProcessingType.FIFO)
-                        .DiskCache(new DiskCache(iconDir, 100 * 1024 * 1024, new Md5FileNameGenerator()))
-                        .DefaultDisplayImageOptions(options)
-                        .ImageDownloader(new HttpClientImageDownloader())
-                        .Build());
-
-    //像册
-    var photoDir = await root.CreateFolderAsync("photo", CreationCollisionOption.OpenIfExists);
-    Photo = ImageLoader.Register("photo", new ImageLoaderConfiguration.Builder()
-                        .ThreadPoolSize(5)
-                        .DenyCacheImageMultipleSizesInMemory()
-                        .MemoryCache(new MemoryCache(10 * 1024 * 1024))
-                        .TasksProcessingOrder(QueueProcessingType.FIFO)
-                        .DiskCache(new DiskCache(photoDir, new Md5FileNameGenerator()))
-                        .DefaultDisplayImageOptions(options)
-                        .ImageDownloader(new HttpClientImageDownloaderEx()) //使用自定义扩展支持高级用法
-                        .Build());
-}
-```
-2.添加命名空间，并使用
 ```xml
 <page xmlns:loader="using:Noear.UWP.Loader">
-  <loader:ImageView Src="{Binding icon_url}" Loader="icon" />
+  <loader:ImageView Src="{Binding icon_url}"  />
 </page>
 ```
+
+更高级操作，请参考Demo项目
+
+
