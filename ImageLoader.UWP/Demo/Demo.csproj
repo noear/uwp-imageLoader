@@ -99,9 +99,20 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="Demo1\Demo1_Api.xaml.cs">
+      <DependentUpon>Demo1_Api.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Demo1\Demo1_ImageView.xaml.cs">
+      <DependentUpon>Demo1_ImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Demo1\ImageUtil1.cs" />
+    <Compile Include="Demo2\Demo2_Api.xaml.cs">
+      <DependentUpon>Demo2_Api.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Demo2\Demo2_ImageView.xaml.cs">
+      <DependentUpon>Demo2_ImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Demo2\ImageUtil2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -125,14 +136,34 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Demo1\Demo1_Api.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Demo1\Demo1_ImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Demo2\Demo2_Api.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Demo2\Demo2_ImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Demo1\" />
-    <Folder Include="Demo2\" />
+    <Reference Include="AsyncHttpClient.UWP">
+      <HintPath>..\_libs\AsyncHttpClient.UWP.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ImageLoader.UWP\ImageLoader.UWP.csproj">
+      <Project>{447c6c74-3b25-430e-8767-09d3c256cfca}</Project>
+      <Name>ImageLoader.UWP</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
