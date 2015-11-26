@@ -1,7 +1,7 @@
 # uwp-imageLoader
 UWP 自已的 ImageLoader （借签自iOS和Android上的接口设计）
 
-更详细示例请参考Demo项目！！！（Demo1为简易示例；Demo2为高级示例）
+详细示例请参考Demo项目！！！（Demo1为简易示例；Demo2为高级示例）
 
 1.1.初始化示例::
 ```java
@@ -51,6 +51,6 @@ loader.DownloadImage(uri, (state,url,view,img)=>{
 </page>
 ```
 
-更高级操作，请参考Demo项目
+更多高级操作请参考Demo项目
 
 
