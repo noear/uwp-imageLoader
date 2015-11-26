@@ -8,18 +8,21 @@ using Windows.Storage.Streams;
 
 namespace Noear.UWP.Loader {
     public class DiskCache : IDiskCache {
-        public DiskCache() {
-        }
-
-        public DiskCache(int limitSize) {
-        }
-
+        
         StorageFolder root;
         StorageFolder folder;
         string directory;
-        public DiskCache(StorageFolder root, string directory) {
+        IFileNameGenerator fileNameGenerator;
+        int limitSize;
+        public DiskCache(StorageFolder root, string directory, IFileNameGenerator fileNameGenerator) :this(root,directory,0,fileNameGenerator){
+            
+        }
+
+        public DiskCache(StorageFolder root, string directory,int limitSize, IFileNameGenerator fileNameGenerator) {
             this.root = root;
             this.directory = directory;
+            this.fileNameGenerator = fileNameGenerator;
+            this.limitSize = limitSize;
             doInit();
         }
 
@@ -32,8 +35,10 @@ namespace Noear.UWP.Loader {
             doInit();//重新生成文件夹
         }
 
-        public async Task<IBuffer> Get(string key) {
-            var item = await folder.TryGetItemAsync(key);
+        public async Task<IBuffer> Get(string url) {
+            string name = getFileName(url);
+
+            var item = await folder.TryGetItemAsync(name);
             if (item != null) {
                 var file = item as StorageFile;
                 if (file != null) {
@@ -44,16 +49,24 @@ namespace Noear.UWP.Loader {
             return null;
         }
 
-        public async void Delete(string key) {
-            var file = await folder.TryGetItemAsync(key);
+        public async void Remove(string url) {
+            string name = getFileName(url);
+
+            var file = await folder.TryGetItemAsync(name);
             if (file != null) {
                 await file.DeleteAsync();
             }
         }
 
-        public async void Save(string key, IBuffer buffer) {
-            var file = await folder.CreateFileAsync(key, CreationCollisionOption.ReplaceExisting);
+        public async void Save(string url, IBuffer buffer) {
+            string name = getFileName(url);
+
+            var file = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteBufferAsync(file, buffer);
+        }
+
+        string getFileName(string url) {
+            return fileNameGenerator.Generate(url);
         }
     }
 }

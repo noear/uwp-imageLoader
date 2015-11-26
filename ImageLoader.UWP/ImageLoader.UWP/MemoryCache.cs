@@ -17,21 +17,21 @@ namespace Noear.UWP.Loader {
 
         }
 
-        Dictionary<string, BitmapImage> data = new Dictionary<string, BitmapImage>();
+        Dictionary<int, BitmapImage> data = new Dictionary<int, BitmapImage>();
         public void Clear() {
             data.Clear();
         }
 
-        public void Delete(string key) {
-            data.Remove(key);
+        public void Remove(string url) {
+            data.Remove(url.GetHashCode());
         }
 
-        public BitmapImage Get(string key) {
-            return data[key];
+        public BitmapImage Get(string url) {
+            return data[url.GetHashCode()];
         }
 
-        public void Save(string key, BitmapImage image) {
-            data[key] = image;
+        public void Save(string url, BitmapImage image) {
+            data[url.GetHashCode()] = image;
         }
     }
 }

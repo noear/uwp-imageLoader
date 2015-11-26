@@ -15,8 +15,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace Noear.UWP.Loader {
     public sealed partial class ImageView : UserControl {
         public ImageView() {
@@ -79,7 +77,10 @@ namespace Noear.UWP.Loader {
         ImageLoader _CurrentLoader;
         public ImageLoader CurrentLoader() {
             if (_CurrentLoader == null) {
-                _CurrentLoader = ImageLoaders.Get(Loader);
+                if (string.IsNullOrEmpty(Loader))
+                    _CurrentLoader = ImageLoader.Instance;
+                else
+                    _CurrentLoader = ImageLoaders.Get(Loader);
             }
 
             return _CurrentLoader;

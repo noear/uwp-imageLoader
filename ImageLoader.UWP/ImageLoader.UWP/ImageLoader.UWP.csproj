@@ -111,6 +111,7 @@
     <Compile Include="DisplayImageOptions.cs" />
     <Compile Include="HttpClientImageDownloader.cs" />
     <Compile Include="IDiskCache.cs" />
+    <Compile Include="IFileNameGenerator.cs" />
     <Compile Include="IImageDownloader.cs" />
     <Compile Include="ImageLoaders.cs" />
     <Compile Include="ImageLoadingListener.cs" />
@@ -122,6 +123,7 @@
     </Compile>
     <Compile Include="IMemoryCache.cs" />
     <Compile Include="LoadingState.cs" />
+    <Compile Include="Md5FileNameGenerator.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="MemoryCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

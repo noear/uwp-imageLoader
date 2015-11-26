@@ -8,8 +8,8 @@ using Windows.Storage.Streams;
 namespace Noear.UWP.Loader {
     public interface IDiskCache {
         void Clear();
-        void Delete(string key);
-        void Save(string key, IBuffer buffer);
-        Task<IBuffer> Get(string key);
+        void Remove(string url);
+        void Save(string url, IBuffer buffer);
+        Task<IBuffer> Get(string url);
     }
 }
