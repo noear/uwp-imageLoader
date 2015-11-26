@@ -43,7 +43,7 @@ loader.DownloadImage(uri, (state,url,view,img)=>{
 });
 ```
 
-1.3控件使用示例::
+1.3.控件使用示例::
 
 ```xml
 <page xmlns:loader="using:Noear.UWP.Loader">
