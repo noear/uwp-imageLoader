@@ -11,20 +11,33 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Noear.UWP.Loader {
     public class ImageLoader {
-        static ImageLoader _Instance;
-        public static ImageLoader Instance {
-            get {
-                if (_Instance == null) {
-                    _Instance = new ImageLoader();
-                }
-
-                return _Instance;
-            }
+        /// <summary>
+        /// 注意一个实例
+        /// </summary>
+        /// <param name="key">关键字</param>
+        /// <param name="config">配置</param>
+        /// <returns></returns>
+        public static ImageLoader Register(string key, ImageLoaderConfiguration config) {
+            return ImageLoaders.Register(key, config);
+        }
+        /// <summary>
+        /// 获取一个实例
+        /// </summary>
+        /// <param name="key">关键字</param>
+        /// <returns></returns>
+        public static ImageLoader Get(string key) {
+            return ImageLoaders.Get(key);
+        }
+        /// <summary>
+        /// 默认实例（需要独立初始化）
+        /// </summary>
+        public static ImageLoader Default {
+            get { return ImageLoaders.Default; }
         }
 
         //---------//---------//---------//---------//---------//---------
 
-            public IDiskCache DiskCache { get { return config.DiskCache; } }
+        public IDiskCache DiskCache { get { return config.DiskCache; } }
         public IMemoryCache MemoryCache { get { return config.MemoryCache; } }
 
         protected ImageLoaderConfiguration config;
@@ -41,7 +54,7 @@ namespace Noear.UWP.Loader {
             DisplayImage(url, view, config.DisplayImageOptions, null);
         }
 
-        public void DisplayImage(ImageBrush imageBrush, String uri) {
+        public void DisplayImage(String uri, ImageBrush imageBrush) {
             DownloadImage(uri, (state, url, v, img) =>
              {
                  if (state == LoadingState.Completed) {
@@ -69,7 +82,7 @@ namespace Noear.UWP.Loader {
             queue.Enqueue(item);
             tryStart();//[触发1]每次添加都尝试启动任务
         }
-        
+
         private async void tryStart() {
             if (processing < config.ThreadPoolSize) {
                 if (queue.Count > 0) {
@@ -118,7 +131,7 @@ namespace Noear.UWP.Loader {
             if (item.Listener != null) {
                 Util.call(() =>
                 {
-                    if(image==null)
+                    if (image == null)
                         item.Listener(LoadingState.Failed, item.Url, item.View, image);
                     else
                         item.Listener(LoadingState.Completed, item.Url, item.View, image);
@@ -129,7 +142,7 @@ namespace Noear.UWP.Loader {
         private void doSave(ImageLoaderQueueItem item, BitmapImage image, IBuffer buffer) {
             if (image == null || buffer == null)
                 return;
-            
+
             if (item.Options.CacheInMemory) {
                 config.MemoryCache.Save(item.Url, image);
             }

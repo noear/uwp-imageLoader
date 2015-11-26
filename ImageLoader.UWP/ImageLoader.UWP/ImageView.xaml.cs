@@ -78,9 +78,9 @@ namespace Noear.UWP.Loader {
         public ImageLoader CurrentLoader() {
             if (_CurrentLoader == null) {
                 if (string.IsNullOrEmpty(Loader))
-                    _CurrentLoader = ImageLoader.Instance;
+                    _CurrentLoader = ImageLoader.Default;
                 else
-                    _CurrentLoader = ImageLoaders.Get(Loader);
+                    _CurrentLoader = ImageLoader.Get(Loader);
             }
 
             return _CurrentLoader;

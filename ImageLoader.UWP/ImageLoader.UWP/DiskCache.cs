@@ -14,20 +14,20 @@ namespace Noear.UWP.Loader {
         string directory;
         IFileNameGenerator fileNameGenerator;
         int limitSize;
-        public DiskCache(StorageFolder root, string directory, IFileNameGenerator fileNameGenerator) :this(root,directory,0,fileNameGenerator){
+        public DiskCache(StorageFolder root, IFileNameGenerator fileNameGenerator) :this(root,0,fileNameGenerator){
             
         }
 
-        public DiskCache(StorageFolder root, string directory,int limitSize, IFileNameGenerator fileNameGenerator) {
+        public DiskCache(StorageFolder root, int limitSize, IFileNameGenerator fileNameGenerator) {
             this.root = root;
-            this.directory = directory;
+            this.directory = "image";
             this.fileNameGenerator = fileNameGenerator;
             this.limitSize = limitSize;
             doInit();
         }
 
         async void doInit() {
-            folder = await root.CreateFolderAsync(directory, CreationCollisionOption.OpenIfExists).AsTask();
+            folder = await root.CreateFolderAsync(directory, CreationCollisionOption.OpenIfExists);
         }
 
         public async void Clear() {
