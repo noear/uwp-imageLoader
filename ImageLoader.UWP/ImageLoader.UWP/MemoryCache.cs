@@ -8,32 +8,40 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Noear.UWP.Loader {
     public class MemoryCache : IMemoryCache {
+        int itemSize;
+        public MemoryCache(int itemSize) {
+            this.itemSize = itemSize;
 
-        public MemoryCache() {
-
+            if (this.itemSize < 10)
+                this.itemSize = 10;
         }
-
-        public MemoryCache(int limitSize) {
-
-        }
-
+        
         Dictionary<int, BitmapImage> data = new Dictionary<int, BitmapImage>();
         public void Clear() {
             data.Clear();
         }
 
         public void Remove(string url) {
-            data.Remove(url.GetHashCode());
+            var key = url.GetHashCode();
+            data.Remove(key);
         }
 
         public BitmapImage Get(string url) {
+            var key = url.GetHashCode();
+
             BitmapImage temp = null;
-            data.TryGetValue(url.GetHashCode(), out temp);
+            data.TryGetValue(key, out temp);
             return temp;
         }
 
         public void Save(string url, BitmapImage image) {
-            data[url.GetHashCode()] = image;
+            var key = url.GetHashCode();
+
+            data[key] = image;
+            if (data.Keys.Count > itemSize) {
+                var temp = data.Keys.First();
+                data.Remove(key);
+            }
         }
     }
 }
