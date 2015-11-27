@@ -131,11 +131,6 @@
     <Content Include="Properties\ImageLoader.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AsyncHttpClient.UWP">
-      <HintPath>..\_libs\AsyncHttpClient.UWP.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="ImageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
