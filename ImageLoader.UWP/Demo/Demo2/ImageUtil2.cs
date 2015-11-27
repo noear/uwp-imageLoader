@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Noear.UWP.Http;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage.Streams;
 
 namespace Demo.Demo2 {
     public static class ImageUtil2 {
@@ -71,8 +72,10 @@ namespace Demo.Demo2 {
             public string Sex;
         }
 
-        class HttpClientImageDownloaderEx : HttpClientImageDownloader {
-            protected override void build(AsyncHttpClient http, string url, object extra) {
+        class HttpClientImageDownloaderEx : IImageDownloader {
+            public async Task<IBuffer> download(string url, object extra) {
+                AsyncHttpClient http = new AsyncHttpClient();
+                http.Url(url);
                 if (extra != null) {
                     //把相关信息传过去作防盗验证
                     var user = extra as User;
@@ -81,6 +84,9 @@ namespace Demo.Demo2 {
                     http.Header("APPID", "1111");
                     http.Header("APPMK", "XXXXXXXXXXXXXXXX");
                 }
+
+                var rsp = await http.Get();
+                return rsp.getBuffer();
             }
         }
     }
