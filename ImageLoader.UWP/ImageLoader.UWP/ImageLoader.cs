@@ -97,18 +97,22 @@ namespace Noear.UWP.Loader {
 
         private async Task doProcess(ImageLoaderQueueItem item) {
             if (item.Options.CacheInMemory) {
-                var img = config.MemoryCache.Get(item.Url);
-                if (img != null) {
-                    doShow(item, img);
-                    return;
+                if (config.MemoryCache != null) {
+                    var img = config.MemoryCache.Get(item.Url);
+                    if (img != null) {
+                        doShow(item, img);
+                        return;
+                    }
                 }
             }
 
             IBuffer buffer = null;
             BitmapImage image = null;
             if (item.Options.CacheOnDisk) {
-                buffer = await config.DiskCache.Get(item.Url);
-                image = await doDecode(item, buffer);
+                if (config.DiskCache != null) {
+                    buffer = await config.DiskCache.Get(item.Url);
+                    image = await doDecode(item, buffer);
+                }
             }
 
             if (buffer == null) {

@@ -27,7 +27,9 @@ namespace Noear.UWP.Loader {
         }
 
         public BitmapImage Get(string url) {
-            return data[url.GetHashCode()];
+            BitmapImage temp = null;
+            data.TryGetValue(url.GetHashCode(), out temp);
+            return temp;
         }
 
         public void Save(string url, BitmapImage image) {
