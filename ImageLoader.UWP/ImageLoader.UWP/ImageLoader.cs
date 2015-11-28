@@ -117,7 +117,7 @@ namespace Noear.UWP.Loader {
             if (buffer == null) {
                 buffer = await config.ImageDownloader.download(item.Url, item.Options.ExtraForDownloader);
                 image = await doDecode(item, buffer);
-                doSave(item, buffer);
+                 doSave(item, buffer);
             }
 
             doShow(item, image);
@@ -142,7 +142,7 @@ namespace Noear.UWP.Loader {
             }
         }
 
-        private void doSave(ImageLoaderQueueItem item, IBuffer buffer) {
+        private async void doSave(ImageLoaderQueueItem item, IBuffer buffer) {
             if (buffer == null)
                 return;
 
@@ -151,7 +151,7 @@ namespace Noear.UWP.Loader {
             }
 
             if (item.Options.CacheOnDisk) {
-                config.DiskCache.Save(item.Url, buffer);
+                await config.DiskCache.Save(item.Url, buffer);
             }
         }
 

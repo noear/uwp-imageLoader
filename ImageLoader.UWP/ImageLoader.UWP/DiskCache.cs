@@ -61,14 +61,19 @@ namespace Noear.UWP.Loader {
             }
         }
 
-        public async void Save(string url, IBuffer buffer) {
+        public async Task<bool> Save(string url, IBuffer buffer) {
             string name = getFileName(url);
             string path = name.Substring(0, 2);
 
             var dir = await folder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
 
             var file = await dir.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
-            await FileIO.WriteBufferAsync(file, buffer);
+            if (file == null)
+                return false;
+            else {
+                await FileIO.WriteBufferAsync(file, buffer);
+                return true;
+            }
         }
 
         string getFileName(string url) {
