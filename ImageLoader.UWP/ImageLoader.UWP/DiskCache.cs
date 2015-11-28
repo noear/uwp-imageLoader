@@ -34,8 +34,11 @@ namespace Noear.UWP.Loader {
 
         public async Task<IBuffer> Get(string url) {
             string name = getFileName(url);
+            string path = name.Substring(0, 2);
 
-            var item = await folder.TryGetItemAsync(name);
+            var dir  = await folder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
+
+            var item = await dir.TryGetItemAsync(name);
             if (item != null) {
                 var file = item as StorageFile;
                 if (file != null) {
@@ -48,8 +51,11 @@ namespace Noear.UWP.Loader {
 
         public async void Remove(string url) {
             string name = getFileName(url);
+            string path = name.Substring(0, 2);
 
-            var file = await folder.TryGetItemAsync(name);
+            var dir = await folder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
+
+            var file = await dir.TryGetItemAsync(name);
             if (file != null) {
                 await file.DeleteAsync();
             }
@@ -57,8 +63,11 @@ namespace Noear.UWP.Loader {
 
         public async void Save(string url, IBuffer buffer) {
             string name = getFileName(url);
+            string path = name.Substring(0, 2);
 
-            var file = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
+            var dir = await folder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
+
+            var file = await dir.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteBufferAsync(file, buffer);
         }
 

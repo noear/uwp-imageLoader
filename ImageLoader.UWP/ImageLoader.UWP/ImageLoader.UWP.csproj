@@ -110,6 +110,7 @@
     <Compile Include="DiskCache.cs" />
     <Compile Include="DisplayImageOptions.cs" />
     <Compile Include="HttpClientImageDownloader.cs" />
+    <Compile Include="IMemoryCache.cs" />
     <Compile Include="IDiskCache.cs" />
     <Compile Include="IFileNameGenerator.cs" />
     <Compile Include="IImageDownloader.cs" />
@@ -121,7 +122,6 @@
     <Compile Include="ImageView.xaml.cs">
       <DependentUpon>ImageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IMemoryCache.cs" />
     <Compile Include="LoadingState.cs" />
     <Compile Include="Md5FileNameGenerator.cs" />
     <Compile Include="Util.cs" />

@@ -96,29 +96,28 @@ namespace Noear.UWP.Loader {
         }
 
         private async Task doProcess(ImageLoaderQueueItem item) {
-            if (item.Options.CacheInMemory) {
-                if (config.MemoryCache != null) {
-                    var img = config.MemoryCache.Get(item.Url);
-                    if (img != null) {
-                        doShow(item, img);
-                        return;
-                    }
-                }
-            }
-
             IBuffer buffer = null;
             BitmapImage image = null;
-            if (item.Options.CacheOnDisk) {
-                if (config.DiskCache != null) {
-                    buffer = await config.DiskCache.Get(item.Url);
+
+            if (item.Options.CacheInMemory) {
+                if (config.MemoryCache != null) {
+                    buffer = config.MemoryCache.Get(item.Url);
                     image = await doDecode(item, buffer);
+                }
+            }
+            if (buffer == null) {
+                if (item.Options.CacheOnDisk) {
+                    if (config.DiskCache != null) {
+                        buffer = await config.DiskCache.Get(item.Url);
+                        image = await doDecode(item, buffer);
+                    }
                 }
             }
 
             if (buffer == null) {
                 buffer = await config.ImageDownloader.download(item.Url, item.Options.ExtraForDownloader);
                 image = await doDecode(item, buffer);
-                doSave(item, image, buffer);
+                doSave(item, buffer);
             }
 
             doShow(item, image);
@@ -143,12 +142,12 @@ namespace Noear.UWP.Loader {
             }
         }
 
-        private void doSave(ImageLoaderQueueItem item, BitmapImage image, IBuffer buffer) {
-            if (image == null || buffer == null)
+        private void doSave(ImageLoaderQueueItem item, IBuffer buffer) {
+            if (buffer == null)
                 return;
 
             if (item.Options.CacheInMemory) {
-                config.MemoryCache.Save(item.Url, image);
+                config.MemoryCache.Save(item.Url, buffer);
             }
 
             if (item.Options.CacheOnDisk) {

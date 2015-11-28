@@ -1,46 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace Noear.UWP.Loader {
     public class MemoryCache : IMemoryCache {
-        int itemSize;
-        public MemoryCache(int itemSize) {
-            this.itemSize = itemSize;
-
-            if (this.itemSize < 10)
-                this.itemSize = 10;
+        uint limitSize;
+        public MemoryCache(uint limitSize) {
+            this.limitSize = limitSize;
         }
-        
-        Dictionary<int, BitmapImage> data = new Dictionary<int, BitmapImage>();
+
+        List<int> keyList = new List<int>();
+        uint data_size = 0;//字节的数量
+        Dictionary<int, IBuffer> data = new Dictionary<int, IBuffer>();
         public void Clear() {
             data.Clear();
+            data_size = 0;
+            keyList.Clear();
         }
 
         public void Remove(string url) {
             var key = url.GetHashCode();
-            data.Remove(key);
+
+            DoRemove(key);
         }
 
-        public BitmapImage Get(string url) {
+        private void DoRemove(int key) {
+            IBuffer temp = null;
+            data.TryGetValue(key, out temp);
+            if (temp != null) {
+                data_size -= temp.Length;
+                data.Remove(key);
+                keyList.Remove(key);
+            }
+        }
+        
+        public IBuffer Get(string url) {
             var key = url.GetHashCode();
 
-            BitmapImage temp = null;
+            IBuffer temp = null;
             data.TryGetValue(key, out temp);
             return temp;
         }
 
-        public void Save(string url, BitmapImage image) {
+        public void Save(string url, IBuffer buffer) {
             var key = url.GetHashCode();
 
-            data[key] = image;
-            if (data.Keys.Count > itemSize) {
-                var temp = data.Keys.First();
-                data.Remove(key);
+            DoRemove(key);
+
+            keyList.Add(key);
+            data.Add(key, buffer);
+            data_size += buffer.Length;
+
+            if (data_size > limitSize) {
+                var temp = keyList[0];
+                DoRemove(temp);
             }
         }
     }
