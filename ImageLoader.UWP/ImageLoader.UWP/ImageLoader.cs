@@ -64,6 +64,9 @@ namespace Noear.UWP.Loader {
         }
 
         public void DisplayImage(string url, Image view, DisplayImageOptions options, ImageLoadingListener listener) {
+            if (string.IsNullOrEmpty(url))
+                return;
+
             var item = new ImageLoaderQueueItem() { Url = url, Options = options, View = view, Listener = listener };
             add(item);
         }
@@ -73,6 +76,9 @@ namespace Noear.UWP.Loader {
         }
 
         public void DownloadImage(string url, DisplayImageOptions options, ImageLoadingListener listener) {
+            if (string.IsNullOrEmpty(url))
+                return;
+
             var item = new ImageLoaderQueueItem() { Url = url, Options = options, View = null, Listener = listener };
             add(item);
             tryStart();
