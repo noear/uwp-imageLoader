@@ -110,7 +110,6 @@
     <Compile Include="DiskCache.cs" />
     <Compile Include="DisplayImageOptions.cs" />
     <Compile Include="HttpClientImageDownloader.cs" />
-    <Compile Include="IMemoryCache.cs" />
     <Compile Include="IDiskCache.cs" />
     <Compile Include="IFileNameGenerator.cs" />
     <Compile Include="IImageDownloader.cs" />
@@ -125,7 +124,6 @@
     <Compile Include="LoadingState.cs" />
     <Compile Include="Md5FileNameGenerator.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="MemoryCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueProcessingType.cs" />
     <Content Include="Properties\ImageLoader.UWP.rd.xml" />

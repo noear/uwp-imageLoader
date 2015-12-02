@@ -38,7 +38,6 @@ namespace Noear.UWP.Loader {
         //---------//---------//---------//---------//---------//---------
 
         public IDiskCache DiskCache { get { return config.DiskCache; } }
-        public IMemoryCache MemoryCache { get { return config.MemoryCache; } }
 
         protected ImageLoaderConfiguration config;
         protected Queue<ImageLoaderQueueItem> queue;
@@ -85,6 +84,15 @@ namespace Noear.UWP.Loader {
         }
         //---------
         private void add(ImageLoaderQueueItem item) {
+            item.Code = item.Url.GetHashCode();
+
+            if (queue.FirstOrDefault(m => m.Code == item.Code) != null) {
+                if (item.Listener != null) {
+                    item.Listener(LoadingState.Cancelled, item.Url, item.View, null);
+                }
+                return;
+            }
+
             queue.Enqueue(item);
             tryStart();//[触发1]每次添加都尝试启动任务
         }
@@ -105,12 +113,7 @@ namespace Noear.UWP.Loader {
             IBuffer buffer = null;
             BitmapImage image = null;
 
-            if (item.Options.CacheInMemory) {
-                if (config.MemoryCache != null) {
-                    buffer = config.MemoryCache.Get(item.Url);
-                    image = await doDecode(item, buffer);
-                }
-            }
+
             if (buffer == null) {
                 if (item.Options.CacheOnDisk) {
                     if (config.DiskCache != null) {
@@ -121,9 +124,11 @@ namespace Noear.UWP.Loader {
             }
 
             if (buffer == null) {
+                item.Listener(LoadingState.Started, item.Url, item.View, null);
+
                 buffer = await config.ImageDownloader.download(item.Url, item.Options.ExtraForDownloader);
                 image = await doDecode(item, buffer);
-                 doSave(item, buffer);
+                doSave(item, buffer);
             }
 
             doShow(item, image);
@@ -151,11 +156,7 @@ namespace Noear.UWP.Loader {
         private async void doSave(ImageLoaderQueueItem item, IBuffer buffer) {
             if (buffer == null)
                 return;
-
-            if (item.Options.CacheInMemory) {
-                config.MemoryCache.Save(item.Url, buffer);
-            }
-
+            
             if (item.Options.CacheOnDisk) {
                 await config.DiskCache.Save(item.Url, buffer);
             }

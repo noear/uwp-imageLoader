@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Noear.UWP.Loader {
     public class ImageLoaderQueueItem {
+        public int Code { get; set; }
         public string Url { get; internal set; }
         public DisplayImageOptions Options { get; internal set; }
         public Image View { get; internal set; }

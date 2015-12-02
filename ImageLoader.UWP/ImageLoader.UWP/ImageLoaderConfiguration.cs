@@ -9,7 +9,6 @@ namespace Noear.UWP.Loader {
         public int ThreadPoolSize;
         public int ThreadPriority;
         public bool DenyCacheImageMultipleSizesInMemory;
-        public IMemoryCache MemoryCache;
         public IDiskCache DiskCache;
         public QueueProcessingType QueueProcessingType;
         public DisplayImageOptions DisplayImageOptions;
@@ -34,11 +33,7 @@ namespace Noear.UWP.Loader {
                 config.DenyCacheImageMultipleSizesInMemory = true;
                 return this;
             }
-
-            public Builder MemoryCache(IMemoryCache memoryCache) {
-                config.MemoryCache = memoryCache;
-                return this;
-            }
+            
 
             public Builder TasksProcessingOrder(QueueProcessingType queueProcessingType) {
                 config.QueueProcessingType = queueProcessingType;
