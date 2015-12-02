@@ -27,10 +27,8 @@ namespace Demo.Demo2 {
             var iconDir = await root.CreateFolderAsync("icon", CreationCollisionOption.OpenIfExists);
             Icon = ImageLoader.Register("icon", new ImageLoaderConfiguration.Builder()
                                 .ThreadPoolSize(5)
-                                .DenyCacheImageMultipleSizesInMemory()
-                                .MemoryCache(new MemoryCache(10 * 1024 * 1024))
                                 .TasksProcessingOrder(QueueProcessingType.FIFO)
-                                .DiskCache(new DiskCache(iconDir, 100 * 1024 * 1024, new Md5FileNameGenerator()))
+                                .DiskCache(new DiskCache(iconDir, new Md5FileNameGenerator()))
                                 .DefaultDisplayImageOptions(options)
                                 .ImageDownloader(new HttpClientImageDownloader())
                                 .Build());
@@ -39,8 +37,6 @@ namespace Demo.Demo2 {
             var photoDir = await root.CreateFolderAsync("photo", CreationCollisionOption.OpenIfExists);
             Photo = ImageLoader.Register("photo", new ImageLoaderConfiguration.Builder()
                                 .ThreadPoolSize(5)
-                                .DenyCacheImageMultipleSizesInMemory()
-                                .MemoryCache(new MemoryCache(10 * 1024 * 1024))
                                 .TasksProcessingOrder(QueueProcessingType.FIFO)
                                 .DiskCache(new DiskCache(photoDir, new Md5FileNameGenerator()))
                                 .DefaultDisplayImageOptions(options)

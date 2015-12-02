@@ -17,8 +17,6 @@ namespace Demo.Demo1 {
             
             ImageLoader.Default.Init(new ImageLoaderConfiguration.Builder()
                                .ThreadPoolSize(5)
-                               .DenyCacheImageMultipleSizesInMemory()
-                               .MemoryCache(new MemoryCache(10 * 1024 * 1024))
                                .TasksProcessingOrder(QueueProcessingType.FIFO)
                                .DiskCache(new DiskCache(ApplicationData.Current.LocalFolder, new Md5FileNameGenerator()))
                                .DefaultDisplayImageOptions(options)
