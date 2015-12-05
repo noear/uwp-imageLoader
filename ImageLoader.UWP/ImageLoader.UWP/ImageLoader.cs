@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -49,12 +50,12 @@ namespace Noear.UWP.Loader {
             return this;
         }
 
-        public void DisplayImage(string url, Image view) {
-            DisplayImage(url, view, config.DisplayImageOptions, null);
+        public ImageLoaderQueueItem DisplayImage(string url, Image view) {
+            return DisplayImage(url, view, config.DisplayImageOptions, null);
         }
 
-        public void DisplayImage(String uri, ImageBrush imageBrush) {
-            DownloadImage(uri, (state, url, v, img) =>
+        public ImageLoaderQueueItem DisplayImage(String uri, ImageBrush imageBrush) {
+            return DownloadImage(uri, (state, url, v, img) =>
              {
                  if (state == LoadingState.Completed) {
                      imageBrush.ImageSource = img;
@@ -62,37 +63,45 @@ namespace Noear.UWP.Loader {
              });
         }
 
-        public void DisplayImage(string url, Image view, DisplayImageOptions options, ImageLoadingListener listener) {
+        public ImageLoaderQueueItem DisplayImage(string url, Image view, DisplayImageOptions options, ImageLoadingListener listener) {
             if (string.IsNullOrEmpty(url))
-                return;
+                return null;
 
             var item = new ImageLoaderQueueItem() { Url = url, Options = options, View = view, Listener = listener };
-            add(item);
+            return add(item);
         }
 
-        public void DownloadImage(string url, ImageLoadingListener listener) {
-            DownloadImage(url, config.DisplayImageOptions, listener);
+        public ImageLoaderQueueItem DownloadImage(string url, ImageLoadingListener listener) {
+           return  DownloadImage(url, config.DisplayImageOptions, listener);
         }
 
-        public void DownloadImage(string url, DisplayImageOptions options, ImageLoadingListener listener) {
+        public ImageLoaderQueueItem DownloadImage(string url, DisplayImageOptions options, ImageLoadingListener listener) {
             if (string.IsNullOrEmpty(url))
-                return;
+                return null;
 
             var item = new ImageLoaderQueueItem() { Url = url, Options = options, View = null, Listener = listener };
-            add(item);
+            return add(item);
         }
+
+        public void Remove(ImageLoaderQueueItem item) {
+            queue.Remove(item);
+        }
+
         //---------
-        private void add(ImageLoaderQueueItem item) {
+        private ImageLoaderQueueItem add(ImageLoaderQueueItem item) {
             item.Code = item.Url.GetHashCode();
 
             if (queue.FirstOrDefault(m => m.Code == item.Code) != null) {
                 if (item.Listener != null) {
                     item.Listener(LoadingState.Cancelled, item.Url, item.View, null);
                 }
-                return;
+                return item;
             }
+            
             queue.Add(item);
             tryStart();//[触发1]每次添加都尝试启动任务
+
+            return item;
         }
 
         private async void tryStart() {
@@ -105,12 +114,13 @@ namespace Noear.UWP.Loader {
                         queue.RemoveAt(0);
                     }
                     else {
-                        int idx = queue.Count-1;
+                        int idx = queue.Count - 1;
                         item = queue[idx];
                         queue.RemoveAt(idx);
                     }
 
                     await doProcess(item);
+
                     processing--;
                     tryStart();//[触发2]每完成一个任务后尝试启动新任何
                 }

@@ -19,16 +19,16 @@ namespace Noear.UWP.Loader {
 
         }
 
-        public static async void asynCall(int delayMillis, DispatchedHandler fun) {
-            if (delayMillis > 0) {
-                await Task.Delay(delayMillis);
-            }
+        //public static async void asynCall(int delayMillis, DispatchedHandler fun) {
+        //    if (delayMillis > 0) {
+        //        await Task.Delay(delayMillis);
+        //    }
 
-            call(fun);
-        }
+        //    call(fun);
+        //}
 
-        public static void asynCall(DispatchedHandler fun) {
-            asynCall(10, fun);
+        public async static void asynCall(DispatchedHandler fun) {
+            await Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, fun);
         }
 
         public async static void call(DispatchedHandler fun) {

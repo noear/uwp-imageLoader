@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 namespace Noear.UWP.Loader {
     public sealed partial class ImageView : UserControl {
@@ -91,6 +80,7 @@ namespace Noear.UWP.Loader {
             wseft?.DoUpdateSourceAsync();
         }
 
+        ImageLoaderQueueItem loadingItem;
         private void DoUpdateSourceAsync() {
             if (Src == null || Src.Scheme == null)
                 return;
@@ -100,7 +90,7 @@ namespace Noear.UWP.Loader {
             }
             else {//如果是http地址
                 var loader = CurrentLoader();
-                loader.DownloadImage(Src.AbsoluteUri, (state, url, v, image) =>
+                loadingItem = loader.DownloadImage(Src.AbsoluteUri, (state, url, v, image) =>
                 {
                     if (_isLoaded) {
                         view.Source = image;
@@ -119,6 +109,10 @@ namespace Noear.UWP.Loader {
 
         private void view_Unloaded(object sender, RoutedEventArgs e) {
             _isLoaded = false;
+
+            if (loadingItem != null) {
+                CurrentLoader().Remove(loadingItem);
+            }
         }
     }
 }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 
 namespace Noear.UWP.Loader {
     public class ImageLoaderQueueItem {
-        public int Code { get; set; }
+        public int Code { get; internal set; }
+
         public string Url { get; internal set; }
         public DisplayImageOptions Options { get; internal set; }
         public Image View { get; internal set; }
