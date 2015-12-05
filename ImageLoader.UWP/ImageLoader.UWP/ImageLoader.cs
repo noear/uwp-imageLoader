@@ -40,12 +40,12 @@ namespace Noear.UWP.Loader {
         public IDiskCache DiskCache { get { return config.DiskCache; } }
 
         protected ImageLoaderConfiguration config;
-        protected Queue<ImageLoaderQueueItem> queue;
+        protected List<ImageLoaderQueueItem> queue;
         protected int processing;
 
         public ImageLoader Init(ImageLoaderConfiguration config) {
             this.config = config;
-            this.queue = new Queue<ImageLoaderQueueItem>();
+            this.queue = new List<ImageLoaderQueueItem>();
             return this;
         }
 
@@ -80,7 +80,6 @@ namespace Noear.UWP.Loader {
 
             var item = new ImageLoaderQueueItem() { Url = url, Options = options, View = null, Listener = listener };
             add(item);
-            tryStart();
         }
         //---------
         private void add(ImageLoaderQueueItem item) {
@@ -92,8 +91,7 @@ namespace Noear.UWP.Loader {
                 }
                 return;
             }
-
-            queue.Enqueue(item);
+            queue.Add(item);
             tryStart();//[触发1]每次添加都尝试启动任务
         }
 
@@ -101,7 +99,17 @@ namespace Noear.UWP.Loader {
             if (processing < config.ThreadPoolSize) {
                 if (queue.Count > 0) {
                     processing++;
-                    var item = queue.Dequeue();
+                    ImageLoaderQueueItem item = null;
+                    if (config.QueueProcessingType == QueueProcessingType.FIFO) {
+                        item = queue[0];
+                        queue.RemoveAt(0);
+                    }
+                    else {
+                        int idx = queue.Count-1;
+                        item = queue[idx];
+                        queue.RemoveAt(idx);
+                    }
+
                     await doProcess(item);
                     processing--;
                     tryStart();//[触发2]每完成一个任务后尝试启动新任何
