@@ -97,9 +97,9 @@ namespace Noear.UWP.Loader {
                 }
                 return item;
             }
-            
-            queue.Add(item);
-            tryStart();//[触发1]每次添加都尝试启动任务
+
+
+            doTryAdd(item);
 
             return item;
         }
@@ -127,20 +127,27 @@ namespace Noear.UWP.Loader {
             }
         }
 
-        private async Task doProcess(ImageLoaderQueueItem item) {
-            IBuffer buffer = null;
-            BitmapImage image = null;
+        private async void doTryAdd(ImageLoaderQueueItem item) {
+            if (item.Options.CacheOnDisk) {
+                if (config.DiskCache != null) {
+                    var buffer = await config.DiskCache.Get(item.Url);
+                    var image = await doDecode(item, buffer);
 
-
-            if (buffer == null) {
-                if (item.Options.CacheOnDisk) {
-                    if (config.DiskCache != null) {
-                        buffer = await config.DiskCache.Get(item.Url);
-                        image = await doDecode(item, buffer);
+                    if (buffer != null) {
+                        doShow(item, image);
+                        return;
                     }
                 }
             }
 
+            queue.Add(item); //
+            tryStart();//[触发1]每次添加都尝试启动任务
+        }
+
+        private async Task doProcess(ImageLoaderQueueItem item) {
+            IBuffer buffer = null;
+            BitmapImage image = null;
+            
             if (buffer == null) {
                 item.Listener(LoadingState.Started, item.Url, item.View, null);
 
