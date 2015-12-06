@@ -189,21 +189,21 @@ namespace Noear.UWP.Loader {
 
         private async Task<BitmapImage> doDecode(ImageLoaderQueueItem item, IBuffer buffer) {
             if (buffer != null) {
+                try {
+                    InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream();
+                    DataWriter datawriter = new DataWriter(stream.GetOutputStreamAt(0));
+                    datawriter.WriteBuffer(buffer, 0, buffer.Length);
+                    await datawriter.StoreAsync();
 
-                InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream();
-                DataWriter datawriter = new DataWriter(stream.GetOutputStreamAt(0));
-                datawriter.WriteBuffer(buffer, 0, buffer.Length);
-                await datawriter.StoreAsync();
-                //await stream.WriteAsync(buffer);
+                    BitmapImage image = new BitmapImage();
+                    image.SetSource(stream);
 
-                BitmapImage image = new BitmapImage();
-                image.SetSource(stream);
-
-                return image;
+                    return image;
+                }
+                catch { }
             }
-            else {
-                return null;
-            }
+
+            return null;
         }
     }
 }
