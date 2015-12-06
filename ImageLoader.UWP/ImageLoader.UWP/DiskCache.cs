@@ -71,8 +71,13 @@ namespace Noear.UWP.Loader {
             if (file == null)
                 return false;
             else {
-                await FileIO.WriteBufferAsync(file, buffer);
-                return true;
+                try {
+                    await FileIO.WriteBufferAsync(file, buffer);
+                    return true;
+                }
+                catch {
+                    return false;
+                }
             }
         }
 
