@@ -92,7 +92,7 @@ namespace Noear.UWP.Loader {
                 var loader = CurrentLoader();
                 loadingItem = loader.DownloadImage(Src.AbsoluteUri, (state, url, v, image) =>
                 {
-                    if (_isLoaded) {
+                    if (_isLoaded && state == LoadingState.Completed) {
                         view.Source = image;
                     }
                 });

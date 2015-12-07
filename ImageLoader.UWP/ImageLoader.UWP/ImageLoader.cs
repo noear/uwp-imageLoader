@@ -111,15 +111,14 @@ namespace Noear.UWP.Loader {
                     ImageLoaderQueueItem item = null;
                     if (config.QueueProcessingType == QueueProcessingType.FIFO) {
                         item = queue[0];
-                        queue.RemoveAt(0);
                     }
                     else {
-                        int idx = queue.Count - 1;
-                        item = queue[idx];
-                        queue.RemoveAt(idx);
+                        item = queue[queue.Count - 1];
                     }
 
                     await doProcess(item);
+
+                    queue.Remove(item);//处理完了后，再删除
 
                     processing--;
                     tryStart();//[触发2]每完成一个任务后尝试启动新任何
