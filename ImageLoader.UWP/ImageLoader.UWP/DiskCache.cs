@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,14 +37,19 @@ namespace Noear.UWP.Loader {
             string name = getFileName(url);
             string path = name.Substring(0, 2);
 
-            var dir  = await folder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
+            try {
+                var dir = await folder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
 
-            var item = await dir.TryGetItemAsync(name);
-            if (item != null) {
-                var file = item as StorageFile;
-                if (file != null) {
-                    return await FileIO.ReadBufferAsync(file);
+                var item = await dir.TryGetItemAsync(name);
+                if (item != null) {
+                    var file = item as StorageFile;
+                    if (file != null) {
+                        return await FileIO.ReadBufferAsync(file);
+                    }
                 }
+            }
+            catch (Exception ex) {
+                Debug.WriteLine(ex.Message, "INFO " + "DiskCache.Get");
             }
 
             return null;
@@ -53,11 +59,16 @@ namespace Noear.UWP.Loader {
             string name = getFileName(url);
             string path = name.Substring(0, 2);
 
-            var dir = await folder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
+            try {
+                var dir = await folder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
 
-            var file = await dir.TryGetItemAsync(name);
-            if (file != null) {
-                await file.DeleteAsync();
+                var file = await dir.TryGetItemAsync(name);
+                if (file != null) {
+                    await file.DeleteAsync();
+                }
+            }
+            catch (Exception ex) {
+                Debug.WriteLine(ex.Message, "INFO " + "DiskCache.Remove");
             }
         }
 
@@ -77,8 +88,11 @@ namespace Noear.UWP.Loader {
                 }
             }
             catch (Exception ex) {
-                return false;
+                Debug.WriteLine(ex.Message, "INFO " + "DiskCache.Save");
             }
+
+            return false;
+
         }
 
         string getFileName(string url) {
