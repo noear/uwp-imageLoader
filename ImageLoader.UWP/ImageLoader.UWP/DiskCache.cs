@@ -49,7 +49,7 @@ namespace Noear.UWP.Loader {
                 }
             }
             catch (Exception ex) {
-                Debug.WriteLine(ex.Message, "INFO " + "DiskCache.Get");
+                Debug.WriteLine(ex.Message, "ERROR " + "DiskCache.Get");
             }
 
             return null;
@@ -68,7 +68,7 @@ namespace Noear.UWP.Loader {
                 }
             }
             catch (Exception ex) {
-                Debug.WriteLine(ex.Message, "INFO " + "DiskCache.Remove");
+                Debug.WriteLine(ex.Message, "ERROR " + "DiskCache.Remove");
             }
         }
 
@@ -88,7 +88,7 @@ namespace Noear.UWP.Loader {
                 }
             }
             catch (Exception ex) {
-                Debug.WriteLine(ex.Message, "INFO " + "DiskCache.Save");
+                Debug.WriteLine(ex.Message, "ERROR " + "DiskCache.Save");
             }
 
             return false;
