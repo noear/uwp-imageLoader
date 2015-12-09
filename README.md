@@ -7,13 +7,11 @@ UWP 自已的 ImageLoader （借签自iOS和Android上的接口设计）
 ```java
 
 var options = new DisplayImageOptions.Builder()
-    .CacheInMemory(false)
     .CacheOnDisk(true)
     .Build();
             
 ImageLoader.Default.Init(new ImageLoaderConfiguration.Builder()
                     .ThreadPoolSize(5)
-                    .MemoryCache(new MemoryCache(10 * 1024 * 1024))
                     .TasksProcessingOrder(QueueProcessingType.FIFO)
                     .DiskCache(new DiskCache(ApplicationData.Current.LocalFolder, new Md5FileNameGenerator()))
                     .DefaultDisplayImageOptions(options)
