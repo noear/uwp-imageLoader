@@ -89,6 +89,7 @@ namespace Noear.UWP.Loader {
                 view.Source = new BitmapImage(Src);
             }
             else {//如果是http地址
+                view.Source = null;
                 var loader = CurrentLoader();
                 loadingItem = loader.DownloadImage(Src.AbsoluteUri, (state, url, v, image) =>
                 {

@@ -23,12 +23,12 @@ namespace Noear.UWP.Loader {
             this.limitSize = 0;
             doInit();
         }
-        
-        async void doInit() {
+
+        async void  doInit() {
             folder = await root.CreateFolderAsync(directory, CreationCollisionOption.OpenIfExists);
         }
 
-        public async void Clear() {
+        public async Task Clear() {
             await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
             doInit();//重新生成文件夹
         }
@@ -55,7 +55,7 @@ namespace Noear.UWP.Loader {
             return null;
         }
 
-        public async void Remove(string url) {
+        public async Task Remove(string url) {
             string name = getFileName(url);
             string path = name.Substring(0, 2);
 
@@ -92,7 +92,6 @@ namespace Noear.UWP.Loader {
             }
 
             return false;
-
         }
 
         string getFileName(string url) {
